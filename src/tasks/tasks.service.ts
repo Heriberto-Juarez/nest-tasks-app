@@ -47,7 +47,7 @@ export class TasksService {
       title: createTaskDto.title,
       description: createTaskDto.description,
       status: TaskStatus.OPEN,
-      user,
+      user: user,
     });
     await this.tasksRepository.save(newTask);
     return newTask;
