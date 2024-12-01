@@ -32,17 +32,16 @@ export class AuthService {
       where: { username: username },
     });
 
-    const isCorrect = await this.passwordService.isPassword(
-      password,
-      user.password,
-    );
-
-    if (user && isCorrect) {
+    if (
+      user &&
+      (await this.passwordService.isPassword(password, user.password))
+    ) {
       const accessToken = await this.generateToken(username);
       return {
         accessToken,
       };
     } else {
+      throw new UnauthorizedException(`Check your credentials`);
     }
   }
 }
