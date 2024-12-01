@@ -28,8 +28,8 @@ export class TasksController {
   }
 
   @Get('/:id')
-  async getTaskById(@Param('id') id: string) {
-    return await this.tasksService.getTaskById(id);
+  async getTaskById(@Param('id') id: string, @GetUser() user: User) {
+    return await this.tasksService.getTaskById(id, user);
   }
 
   @Post()
@@ -41,16 +41,17 @@ export class TasksController {
   }
 
   @Delete('/:id')
-  async deleteTaskById(@Param('id') id: string) {
-    return await this.tasksService.deleteTaskById(id);
+  async deleteTaskById(@Param('id') id: string, @GetUser() user: User) {
+    return await this.tasksService.deleteTaskById(id, user);
   }
 
   @Patch('/:id/status')
   updateTaskStatusById(
     @Param('id') id: string,
     @Body() updateTaskStatusDto: UpdateTaskStatusDto,
+    @GetUser() user: User,
   ) {
     const { status } = updateTaskStatusDto;
-    this.tasksService.updateTaskStatusById(id, status);
+    this.tasksService.updateTaskStatusById(id, status, user);
   }
 }

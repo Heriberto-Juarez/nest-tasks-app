@@ -13,10 +13,11 @@ export class TasksService {
     @InjectRepository(Task) private tasksRepository: Repository<Task>,
   ) {}
 
-  async getTaskById(id: string): Promise<Task> {
+  async getTaskById(id: string, user): Promise<Task> {
     const found = await this.tasksRepository.findOne({
       where: {
         id: id,
+        user: user,
       },
     });
     if (found) return found;
@@ -53,8 +54,8 @@ export class TasksService {
     return newTask;
   }
 
-  async deleteTaskById(taskId: string) {
-    const found = await this.getTaskById(taskId);
+  async deleteTaskById(taskId: string, user: User) {
+    const found = await this.getTaskById(taskId, user);
     if (found) {
       return await this.tasksRepository.delete(taskId);
     }
@@ -64,8 +65,9 @@ export class TasksService {
   async updateTaskStatusById(
     taskId: string,
     status: TaskStatus,
+    user: User,
   ): Promise<void> {
-    const task = await this.getTaskById(taskId); // Checks if it exists.
+    const task = await this.getTaskById(taskId, user); // Checks if it exists.
     task.status = status;
     await this.tasksRepository.save(task);
   }
