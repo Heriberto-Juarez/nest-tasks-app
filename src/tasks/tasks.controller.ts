@@ -23,8 +23,8 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
-  getAllTasks(@Query() filterDto: GetTasksFilterDto) {
-    return this.tasksService.getAllTasks(filterDto);
+  getAllTasks(@Query() filterDto: GetTasksFilterDto, @GetUser() user: User) {
+    return this.tasksService.getAllTasks(filterDto, user);
   }
 
   @Get('/:id')

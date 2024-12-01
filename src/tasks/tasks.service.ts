@@ -23,7 +23,7 @@ export class TasksService {
     throw new NotFoundException(`Task with ID "${id}" not found`);
   }
 
-  async getTasksWithFilter(filterDto: GetTasksFilterDto): Promise<Task[]> {
+  async getAllTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
     const { search, status } = filterDto;
 
     const whereConditions: any = {};
@@ -35,16 +35,11 @@ export class TasksService {
       whereConditions.title = Like(`%${search}%`);
     }
 
+    whereConditions.user = user;
+
     return await this.tasksRepository.find({
       where: [{ ...whereConditions }],
     });
-  }
-
-  async getAllTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
-    if (Object.keys(filterDto).length > 0) {
-      return this.getTasksWithFilter(filterDto);
-    }
-    return await this.tasksRepository.find();
   }
 
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
